@@ -1,6 +1,7 @@
 package MultiThreadedServer;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -15,14 +16,19 @@ public class Client {
                 try{
                     InetAddress address = InetAddress.getByName("localhost");
                     Socket socket = new Socket(address,port);
-                    PrintWriter toSocket = new PrintWriter(socket.getOutputStream());
-                    BufferedReader fromSocket = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    toSocket.println("Hello from the Client");
-                    String response = fromSocket.readLine();
-                    System.out.println("Response from the Socket is: "+response);
-                    toSocket.close();
-                    fromSocket.close();
-                    socket.close();
+                    try {
+                        PrintWriter toSocket = new PrintWriter(socket.getOutputStream());
+                        BufferedReader fromSocket = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        toSocket.println("Hello from the Client");
+                        String response = fromSocket.readLine();
+                        System.out.println("Response from the Socket is: "+response);
+                    }
+                    //toSocket.close();
+                    //fromSocket.close();
+                    //socket.close();
+                    catch (IOException ex){
+                        ex.printStackTrace();
+                    }
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -39,7 +45,8 @@ public class Client {
             }
         }
         catch (Exception e){
-            return;
+            e.printStackTrace();
+            //return;
         }
     }
 }

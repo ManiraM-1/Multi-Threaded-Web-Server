@@ -23,14 +23,13 @@ public class Server {
             }
         }*/
 
-        return (clientSocket)->{
-            try {
-                PrintWriter toClient = new PrintWriter(clientSocket.getOutputStream());
-                toClient.println("Hello from the Server");
-                toClient.close();
-                clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        return (clientSocket) -> {
+            try (PrintWriter toSocket = new PrintWriter(clientSocket.getOutputStream(), true)) {
+                toSocket.println("Hello from server " + clientSocket.getInetAddress());
+                //toSocket.close();
+                //clientSocket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         };
     }
@@ -44,10 +43,11 @@ public class Server {
             while (true){
                 Socket acceptedSocket = serverSocket.accept();
                 Thread thread = new Thread(()->server.getConsumer().accept(acceptedSocket));
+                thread.start();
             }
         }
         catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 }
